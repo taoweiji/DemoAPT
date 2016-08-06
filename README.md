@@ -1,7 +1,7 @@
-越来越多第三方库使用apt技术，如DBflow、Dagger2、ButterKnife等。在编译时根据Annotation生成了相关的代码，给开发带来了很大的便利。感觉APT这项技术很炫酷，所以就有了这篇文章。
+越来越多第三方库使用apt技术，如[DBflow](https://github.com/Raizlabs/DBFlow)、[Dagger2](https://github.com/google/dagger)、[ButterKnife](https://github.com/JakeWharton/butterknife)、[ActivityRouter](https://github.com/joyrun/ActivityRouter)、[AptPreferences](https://github.com/joyrun/AptPreferences)。在编译时根据Annotation生成了相关的代码，非常高大上但是也非常简单的技术，可以给开发带来了很大的便利。
 
 ## Annotation
-如果想学习APT，那么就必须先了解Annotation的基础，这里附加我另外一篇文章的地址：
+如果想学习APT，那么就必须先了解Annotation的基础，这里附加我另外一篇文章的地址：http://www.taoweiji.cn/2016/07/18/java-annotation
 ## APT
 APT(Annotation Processing Tool)是一种处理注释的工具,它对源代码文件进行检测找出其中的Annotation，使用Annotation进行额外的处理。
       Annotation处理器在处理Annotation时可以根据源文件中的Annotation生成额外的源文件和其它的文件(文件具体内容由Annotation处理器的编写者决定),APT还会编译生成的源文件和原来的源文件，将它们一起生成class文件。
@@ -159,7 +159,7 @@ public @interface DIView {
     int value() default 0;
 }
 ```
-2. 创建DIProcessor方法
+1. 创建DIProcessor方法
 
 ```
 @AutoService(Processor.class)
@@ -225,7 +225,7 @@ public class DIProcessor extends AbstractProcessor {
     }
 }
 ```
-3. 使用DIActivity
+1. 使用DIActivity
 
 ```
 @DIActivity
@@ -250,25 +250,41 @@ public final class DIMainActivity extends MainActivity {
  }
 }
 ```
-运行看效果
+### 常用方法
 
-### 常用的类总结
-1. TypeElement
-> 获取方式
-2. ExecutableElement
-3. TypeName
-4. Type
-5. ClassName
-> 获取方式
-6. Modifier
-7. 泛型参数创建
-> ParameterizedTypeName.get(ClassName.get(Map.class), String.class,String.class)
-8. 
+##### 常用Element子类
+1. TypeElement：类
+2. ExecutableElement：成员方法
+3. VariableElement：成员变量
+
+##### 通过包名和类名获取TypeName
+TypeName targetClassName = ClassName.get("PackageName", "ClassName");
+
+##### 通过Element获取TypeName
+TypeName type = TypeName.get(element.asType());
+
+##### 获取TypeElement的包名
+String packageName = processingEnv.getElementUtils().getPackageOf(type).getQualifiedName().toString();
+
+##### 获取TypeElement的所有成员变量和成员方法
+List<? extends Element> members = processingEnv.getElementUtils().getAllMembers(typeElement);
 
 
 ### 总结
-上面Example的代码放在github：https://github.com/taoweiji/DemoAPT。也推荐阅读dagger2、dbflow、ButterKnife等基于apt的开源项目代码。
-JavaPoet：https://github.com/square/javapoet 也有很多例子可以学习。
-### 项目推荐：AptPreferences（快速持久化框架）
-本人基于APT技术做了一个AptPrefences项目，用于更加方便地使用SharedPreferences，通过对普通的javabean类增加注解，即可把该类变成了SharedPreferences的封装类，降低使用SharedPreferences的成本，也让代码更加规范。
-项目地址 https://github.com/taoweiji/AptPreferences
+ 推荐阅读dagger2、dbflow、ButterKnife等基于apt的开源项目代码。[JavaPoet](https://github.com/square/javapoet) 也有很多例子可以学习。
+
+#### Example代码
+https://github.com/taoweiji/DemoAPT
+
+### 我们的开源项目推荐：
+#### Android快速持久化框架：AptPreferences
+AptPreferences是基于面向对象设计的快速持久化框架，目的是为了简化SharePreferences的使用，减少代码的编写。可以非常快速地保存基本类型和对象。AptPreferences是基于APT技术实现，在编译期间实现代码的生成，根据不同的用户区分持久化信息。
+
+https://github.com/joyrun/AptPreferences
+
+#### ActivityRouter路由框架：通过注解实现URL打开Activity
+基于apt技术，通过注解方式来实现URL打开Activity功能，并支持在WebView和外部浏览器使用，支持多级Activity跳转，支持Bundle、Uri参数注入并转换参数类型。
+
+https://github.com/joyrun/ActivityRouter
+
+
