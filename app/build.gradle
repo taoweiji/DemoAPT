@@ -26,4 +26,6 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.3.0'
     compile project(':annotation')
     apt project(':compiler')
+//    compile 'com.github.joyrun.AptPreferences:aptpreferences:0.2.3'
+//    apt 'com.github.joyrun.AptPreferences:aptpreferences-compiler:0.2.3'
 }

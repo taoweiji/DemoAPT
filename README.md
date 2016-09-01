@@ -190,7 +190,7 @@ public class DIProcessor extends AbstractProcessor {
                 if (diView == null){
                     continue;
                 }
-                bindViewMethodSpecBuilder.addStatement(String.format("activity.%s = (%s) activity.findViewById(R.id.text)",item.getSimpleName(),ClassName.get(item.asType()).toString()));
+                bindViewMethodSpecBuilder.addStatement(String.format("activity.%s = (%s) activity.findViewById(%s)",item.getSimpleName(),ClassName.get(item.asType()).toString(),diView.value()));
             }
             TypeSpec typeSpec = TypeSpec.classBuilder("DI" + element.getSimpleName())
                     .superclass(TypeName.get(typeElement.asType()))
